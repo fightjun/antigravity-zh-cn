@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "generatedAt": "2026-11-25T20:08:13.334Z",
+  "stats": {
+    "exactCount": 275,
+    "patternCount": 15,
+    "fileCount": 17
+  },
+  "files": {
+    "daemon.mjs": {
+      "sha256": "494f64288b968f002b331ac94a6ed0e31b402d8ce06f08ac1fa41058683bcc06",
+      "size": 16278
+    },
+    "daemon/cdp-bridge.mjs": {
+      "sha256": "55573922bd913b396a2540a880cc6ea0949001f81433e5039ba303fdf14fb7a8",
+      "size": 4681
+    },
+    "daemon/paths.mjs": {
+      "sha256": "84c14bfa0cc922a4c5577f031392c69a42fc1ef4f6c24af7b3837d32e64ffefa",
+      "size": 4626
+    },
+    "daemon/updater.mjs": {
+      "sha256": "2db3b58f82527db56f4f3c6d76169ed1054f4384a139aac31924573c0202e767",
+      "size": 8936
+    },
+    "i18n/patterns.json": {
+      "sha256": "150d5709f40dd0864cb42f99efcb812bbfe14d1b41906eb94fb041435503c8f3",
+      "size": 2192
+    },
+    "i18n/zh-CN.json": {
+      "sha256": "d18bad6dc9a1114ca649561c27ad5cef21dd1956789d45c57456500ef4e9a910",
+      "size": 8566
+    },
+    "installer/cdp-launch.mjs": {
+      "sha256": "8bd498e8cb4dc4af82fd83106203cc0f9bbfd5b0a49c29478a0ef4c71e75f324",
+      "size": 4722
+    },
+    "installer/env.mjs": {
+      "sha256": "87139c739a5f5e6fea94cacf76e7cab45e234c5980675c26617de57fe240b9c0",
+      "size": 2768
+    },
+    "installer/manifest.mjs": {
+      "sha256": "c78aceb2df2f6121ba3f7869579c270d1dbc0e3113ca793384557fa9e15a59f8",
+      "size": 2982
+    },
+    "installer/service.mjs": {
+      "sha256": "60d39385e33ec6bd8acc1e3570a00146e18ebcd7b05edc4a29592e3f13ac0b3c",
+      "size": 4653
+    },
+    "runtime/00-bootstrap.js": {
+      "sha256": "14e645d70462eb6d42f1fc739a581c901f8f1b5fc978a34717db13b28a5030b5",
+      "size": 2375
+    },
+    "runtime/10-i18n-engine.js": {
+      "sha256": "c295a858edd67098289f40af5eacc5b325678ff4f563f3e3dde128d246a38116",
+      "size": 7938
+    },
+    "runtime/20-collector.js": {
+      "sha256": "55a11aaf031e477c4c57ee63ea9fd9ff634908dce3e9ed13a83c402de46bf9cb",
+      "size": 2725
+    },
+    "runtime/30-settings-ui.js": {
+      "sha256": "8d62cc1da06c602364fa585e143583f94761bf12c1860df8d9299ffa57af7bac",
+      "size": 21023
+    },
+    "runtime/90-init.js": {
+      "sha256": "b6a153e0eeda2af43ec3dd346fbc929280f0f6ebcc32bf4a984a493e2047ac58",
+      "size": 544
+    },
+    "shared.mjs": {
+      "sha256": "a521b13f110b76e11c5357f312b55ca635ad8df6fee91a087b0be833c9f67eaf",
+      "size": 4437
+    },
+    "styles/settings-panel.css": {
+      "sha256": "67c26b8e84b83b2ec18aa0e7be5a75742699f7116ec92245446347dfe85eae99",
+      "size": 5280
+    }
+  }
+}

@@ -1,0 +1,264 @@
+/* settings-panel.css: Adaptive light/dark styling for Antigravity zh-CN Settings Panel */
+.ag-zh-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.ag-zh-panel {
+  --ag-zh-bg: #1e1f22;
+  --ag-zh-surface: #27292e;
+  --ag-zh-border: rgba(255, 255, 255, 0.1);
+  --ag-zh-text: #f1f3f5;
+  --ag-zh-muted: #9aa0a6;
+  --ag-zh-accent: #3b82f6;
+  --ag-zh-accent-hover: #2563eb;
+  --ag-zh-success: #10b981;
+  --ag-zh-warn: #f59e0b;
+  --ag-zh-danger: #ef4444;
+
+  color: var(--ag-zh-text);
+  background: var(--ag-zh-bg);
+  border: 1px solid var(--ag-zh-border);
+  border-radius: 12px;
+  width: min(680px, 92vw);
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 20px 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  font-size: 13px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: light) {
+  .ag-zh-panel {
+    --ag-zh-bg: #ffffff;
+    --ag-zh-surface: #f5f7fa;
+    --ag-zh-border: rgba(0, 0, 0, 0.1);
+    --ag-zh-text: #1f2328;
+    --ag-zh-muted: #59636e;
+  }
+}
+
+.ag-zh-panel.ag-zh-embedded {
+  width: 100%;
+  max-height: none;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 16px 20px;
+}
+
+.ag-zh-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ag-zh-border);
+  margin-bottom: 16px;
+}
+
+.ag-zh-title-group h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ag-zh-subtitle {
+  font-size: 12px;
+  color: var(--ag-zh-muted);
+  margin-top: 2px;
+}
+
+.ag-zh-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ag-zh-card {
+  background: var(--ag-zh-surface);
+  border: 1px solid var(--ag-zh-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.ag-zh-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ag-zh-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--ag-zh-border);
+}
+
+.ag-zh-row:first-of-type {
+  border-top: none;
+  padding-top: 2px;
+}
+
+.ag-zh-row-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ag-zh-row-desc {
+  font-size: 11.5px;
+  color: var(--ag-zh-muted);
+}
+
+.ag-zh-btn {
+  appearance: none;
+  border: 1px solid var(--ag-zh-border);
+  background: transparent;
+  color: var(--ag-zh-text);
+  border-radius: 7px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.ag-zh-btn:hover:not(:disabled) {
+  background: rgba(128, 128, 128, 0.15);
+}
+
+.ag-zh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ag-zh-btn-primary {
+  background: var(--ag-zh-accent);
+  border-color: var(--ag-zh-accent);
+  color: #fff;
+}
+
+.ag-zh-btn-primary:hover:not(:disabled) {
+  background: var(--ag-zh-accent-hover);
+}
+
+.ag-zh-input,
+.ag-zh-select {
+  background: var(--ag-zh-bg);
+  color: var(--ag-zh-text);
+  border: 1px solid var(--ag-zh-border);
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 12px;
+  outline: none;
+}
+
+.ag-zh-input:focus,
+.ag-zh-select:focus {
+  border-color: var(--ag-zh-accent);
+}
+
+.ag-zh-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ag-zh-stat-box {
+  background: var(--ag-zh-bg);
+  border: 1px solid var(--ag-zh-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.ag-zh-stat-val {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ag-zh-stat-key {
+  font-size: 11px;
+  color: var(--ag-zh-muted);
+}
+
+.ag-zh-status-banner {
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  margin-top: 8px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.ag-zh-status-banner.success {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.ag-zh-status-banner.error {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.ag-zh-untranslated-list {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.ag-zh-untranslated-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ag-zh-bg);
+  border: 1px solid var(--ag-zh-border);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.ag-zh-untranslated-en {
+  flex: 1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ag-zh-toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2147483100;
+  background: #1e1f22;
+  color: #f1f3f5;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}

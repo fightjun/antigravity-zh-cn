@@ -1,0 +1,92 @@
+[
+  {
+    "id": "files-changed-count",
+    "pattern": "^(\\d+)\\s+files?\\s+changed$",
+    "flags": "i",
+    "replace": "$1 个文件已修改"
+  },
+  {
+    "id": "thought-seconds",
+    "pattern": "^Thought for\\s+(\\d+(?:\\.\\d+)?)s$",
+    "flags": "i",
+    "replace": "已思考 $1 秒"
+  },
+  {
+    "id": "thought-minutes",
+    "pattern": "^Thought for\\s+(\\d+)m\\s*(\\d+)s$",
+    "flags": "i",
+    "replace": "已思考 $1 分 $2 秒"
+  },
+  {
+    "id": "step-of-total",
+    "pattern": "^Step\\s+(\\d+)\\s+of\\s+(\\d+)$",
+    "flags": "i",
+    "replace": "第 $1 / $2 步"
+  },
+  {
+    "id": "steps-completed",
+    "pattern": "^(\\d+)\\s+of\\s+(\\d+)\\s+steps?\\s+completed$",
+    "flags": "i",
+    "replace": "已完成 $1 / $2 步"
+  },
+  {
+    "id": "ago-seconds",
+    "pattern": "^(\\d+)\\s*s(?:ec(?:ond)?s?)?\\s+ago$",
+    "flags": "i",
+    "replace": "$1 秒前"
+  },
+  {
+    "id": "ago-minutes",
+    "pattern": "^(\\d+)\\s*m(?:in(?:ute)?s?)?\\s+ago$",
+    "flags": "i",
+    "replace": "$1 分钟前"
+  },
+  {
+    "id": "ago-hours",
+    "pattern": "^(\\d+)\\s*h(?:our)?s?\\s+ago$",
+    "flags": "i",
+    "replace": "$1 小时前"
+  },
+  {
+    "id": "ago-days",
+    "pattern": "^(\\d+)\\s*d(?:ay)?s?\\s+ago$",
+    "flags": "i",
+    "replace": "$1 天前"
+  },
+  {
+    "id": "version-available",
+    "pattern": "^Version\\s+([\\d.]+(?:-[\\w.]+)?)\\s+is\\s+available$",
+    "flags": "i",
+    "replace": "发现新版本 $1"
+  },
+  {
+    "id": "running-tasks-count",
+    "pattern": "^(\\d+)\\s+running\\s+tasks?$",
+    "flags": "i",
+    "replace": "$1 个运行中任务"
+  },
+  {
+    "id": "active-subagents-count",
+    "pattern": "^(\\d+)\\s+active\\s+subagents?$",
+    "flags": "i",
+    "replace": "$1 个活跃子智能体"
+  },
+  {
+    "id": "tools-available",
+    "pattern": "^(\\d+)\\s+tools?\\s+available$",
+    "flags": "i",
+    "replace": "$1 个可用工具"
+  },
+  {
+    "id": "quota-resets-in",
+    "pattern": "^Quota\\s+resets?\\s+in\\s+(.+)$",
+    "flags": "i",
+    "replace": "配额将在 $1 后重置"
+  },
+  {
+    "id": "ai-credits-remaining",
+    "pattern": "^([\\d,]+)\\s+AI\\s+credits?\\s+remaining$",
+    "flags": "i",
+    "replace": "剩余 $1 AI 点数"
+  }
+]

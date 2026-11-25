@@ -1,0 +1,32 @@
+{
+  "name": "antigravity-zh-cn",
+  "version": "1.0.0",
+  "description": "Non-invasive Simplified Chinese localization plugin for Google Antigravity 2.0 with in-app Settings UI, automatic post-upgrade updates, and untranslated string collector.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "check": "node -e \"import('node:fs').then(fs => { import('node:child_process').then(({execFileSync}) => { const walk = d => fs.existsSync(d) ? fs.readdirSync(d, {withFileTypes:true}).flatMap(e => e.isDirectory() ? walk(d+'/'+e.name) : (/\\.mjs$/.test(e.name) ? [d+'/'+e.name] : [])) : []; for (const f of ['install.mjs', ...walk('core'), ...walk('tests')]) execFileSync(process.execPath, ['--check', f], {stdio:'inherit'}); const rt = fs.readdirSync('core/runtime').filter(n => n.endsWith('.js')).sort().map(n => fs.readFileSync('core/runtime/'+n, 'utf8')).join('\\n'); execFileSync(process.execPath, ['--input-type=commonjs', '--check'], {input: 'const __AG_ZH_BOOT__ = {};\\n' + rt, stdio:['pipe','inherit','inherit']}); console.log('All syntax checks passed.'); }); })\"",
+    "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.mjs",
+    "manifest": "node install.mjs build-manifest",
+    "install-pack": "node install.mjs install",
+    "uninstall-pack": "node install.mjs uninstall",
+    "relaunch": "node install.mjs relaunch",
+    "update-pack": "node install.mjs update",
+    "rollback": "node install.mjs rollback",
+    "doctor": "node --disable-warning=ExperimentalWarning install.mjs doctor",
+    "verify": "node --disable-warning=ExperimentalWarning install.mjs verify"
+  },
+  "keywords": [
+    "antigravity",
+    "google-antigravity",
+    "zh-cn",
+    "chinese",
+    "i18n",
+    "localization",
+    "auto-update",
+    "cdp"
+  ]
+}

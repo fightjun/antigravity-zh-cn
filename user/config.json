@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "channel": "auto",
+  "autoUpdate": true,
+  "autoUpdateOnAppUpgrade": true,
+  "updateMode": "auto",
+  "updateRepo": "fightjun/antigravity-zh-cn",
+  "updateRef": "main",
+  "checkIntervalHours": 12,
+  "collectUntranslated": true,
+  "translatePlaceholders": true,
+  "translateTooltips": true,
+  "debug": false
+}

@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax check
+        run: npm run check
+      - name: Run unit tests
+        run: npm test
+      - name: Verify core/manifest.json is up to date
+        run: |
+          npm run manifest
+          git diff --exit-code core/manifest.json || (echo "core/manifest.json is out of date. Run 'npm run manifest' and commit." && exit 1)
