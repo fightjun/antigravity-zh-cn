@@ -116,6 +116,28 @@ export function relaunchAntigravityWithCdp(channelInfo) {
     return { ok: false, error: `Antigravity executable not found: ${channelInfo?.executable}` };
   }
 
+  // Close existing Antigravity instance first; otherwise Electron single-instance lock ignores --remote-debugging-port=0
+  if (process.platform === 'win32') {
+    const exeName = path.basename(channelInfo.executable);
+    spawnSync('taskkill', ['/IM', exeName, '/T'], { encoding: 'utf8', windowsHide: true });
+    // Brief wait for graceful exit, then force if still alive
+    spawnSync('powershell.exe', ['-NoProfile', '-Command', 'Start-Sleep -Milliseconds 1500'], {
+      windowsHide: true
+    });
+    spawnSync('taskkill', ['/F', '/IM', exeName, '/T'], { encoding: 'utf8', windowsHide: true });
+    spawnSync('powershell.exe', ['-NoProfile', '-Command', 'Start-Sleep -Milliseconds 800'], {
+      windowsHide: true
+    });
+  } else if (process.platform === 'darwin') {
+    const appName = path.basename(channelInfo.appDir, '.app');
+    spawnSync('osascript', ['-e', `tell application "${appName}" to quit`], { encoding: 'utf8' });
+    spawnSync('sleep', ['1.5']);
+  } else {
+    const exeName = path.basename(channelInfo.executable);
+    spawnSync('pkill', ['-f', exeName], { encoding: 'utf8' });
+    spawnSync('sleep', ['1.5']);
+  }
+
   if (process.platform === 'darwin') {
     const child = spawn('open', ['-a', channelInfo.appDir, '--args', CDP_FLAG], {
       detached: true,
@@ -131,5 +153,5 @@ export function relaunchAntigravityWithCdp(channelInfo) {
     windowsHide: false
   });
   child.unref();
-  return { ok: true, executable: channelInfo.executable };
+  return { ok: true, executable: channelInfo.executable, pid: child.pid || null };
 }

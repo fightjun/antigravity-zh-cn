@@ -4,6 +4,8 @@ import os from 'node:os';
 import { spawn, spawnSync } from 'node:child_process';
 import { SERVICE_IDS } from '../shared.mjs';
 
+const WIN_RUN_KEY = 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run';
+
 function getDaemonEntryPath(targetDir) {
   return path.join(targetDir, 'core', 'daemon.mjs');
 }
@@ -12,11 +14,30 @@ function getWindowsVbsPath(targetDir) {
   return path.join(targetDir, 'run-daemon-hidden.vbs');
 }
 
+export function stopExistingDaemon(targetDir) {
+  const pidPath = path.join(targetDir, 'daemon.pid');
+  if (!fs.existsSync(pidPath)) return false;
+  try {
+    const pid = Number.parseInt(fs.readFileSync(pidPath, 'utf8').trim(), 10);
+    if (Number.isFinite(pid) && pid > 0) {
+      process.kill(pid);
+    }
+  } catch {
+    // Process already exited
+  }
+  try {
+    fs.rmSync(pidPath, { force: true });
+  } catch {}
+  return true;
+}
+
 export function registerSystemService(targetDir) {
   const nodeExec = process.execPath;
   const daemonPath = getDaemonEntryPath(targetDir);
 
   if (process.platform === 'win32') {
+    stopExistingDaemon(targetDir);
+
     const vbsPath = getWindowsVbsPath(targetDir);
     const vbs = [
       'Set sh = CreateObject("WScript.Shell")',
@@ -25,23 +46,15 @@ export function registerSystemService(targetDir) {
     ].join('\r\n');
     fs.writeFileSync(vbsPath, vbs, 'utf8');
 
-    const res = spawnSync(
-      'schtasks',
-      [
-        '/Create',
-        '/F',
-        '/SC',
-        'ONLOGON',
-        '/TN',
-        SERVICE_IDS.windowsTaskName,
-        '/TR',
-        `wscript.exe "${vbsPath}"`
-      ],
+    // Register in HKCU\...\Run (requires no Administrator privileges!)
+    const regRes = spawnSync(
+      'reg',
+      ['add', WIN_RUN_KEY, '/v', SERVICE_IDS.windowsTaskName, '/t', 'REG_SZ', '/d', `wscript.exe "${vbsPath}"`, '/f'],
       { encoding: 'utf8', windowsHide: true }
     );
 
-    // Also launch immediately in background
-    const child = spawn('wscript.exe', [vbsPath], {
+    // Launch node daemon directly in detached hidden mode so it starts reliably immediately
+    const child = spawn(nodeExec, [daemonPath, '--target-dir', targetDir], {
       detached: true,
       stdio: 'ignore',
       windowsHide: true
@@ -49,11 +62,13 @@ export function registerSystemService(targetDir) {
     child.unref();
 
     return {
-      ok: res.status === 0,
+      ok: regRes.status === 0,
       platform: 'win32',
-      taskName: SERVICE_IDS.windowsTaskName,
+      autostart: 'HKCU\\Run',
+      valueName: SERVICE_IDS.windowsTaskName,
+      pid: child.pid || null,
       vbsPath,
-      output: (res.stdout || res.stderr || '').trim()
+      output: (regRes.stdout || regRes.stderr || '').trim()
     };
   }
 
@@ -118,7 +133,13 @@ WantedBy=default.target
 }
 
 export function uninstallSystemService(targetDir) {
+  stopExistingDaemon(targetDir);
+
   if (process.platform === 'win32') {
+    spawnSync('reg', ['delete', WIN_RUN_KEY, '/v', SERVICE_IDS.windowsTaskName, '/f'], {
+      encoding: 'utf8',
+      windowsHide: true
+    });
     spawnSync('schtasks', ['/Delete', '/F', '/TN', SERVICE_IDS.windowsTaskName], {
       encoding: 'utf8',
       windowsHide: true

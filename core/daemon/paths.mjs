@@ -1,7 +1,44 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { spawnSync } from 'node:child_process';
 import { readJsonSafe } from '../shared.mjs';
+
+const versionCache = new Map();
+
+function readExecutableVersion(executable, pkgJsonPath) {
+  const cacheKey = `${executable || ''}|${pkgJsonPath || ''}`;
+  if (versionCache.has(cacheKey)) return versionCache.get(cacheKey);
+
+  let version = null;
+  const pkg = pkgJsonPath ? readJsonSafe(pkgJsonPath, null) : null;
+  if (pkg?.version) {
+    version = String(pkg.version);
+  } else if (process.platform === 'win32' && executable && fs.existsSync(executable)) {
+    const res = spawnSync(
+      'powershell.exe',
+      [
+        '-NoProfile',
+        '-NonInteractive',
+        '-Command',
+        `(Get-Item ${JSON.stringify(executable)}).VersionInfo.FileVersion`
+      ],
+      { encoding: 'utf8', windowsHide: true }
+    );
+    const out = (res.stdout || '').trim();
+    if (res.status === 0 && out) version = out;
+  } else if (process.platform === 'darwin' && executable) {
+    const plistPath = path.resolve(path.dirname(executable), '..', 'Info.plist');
+    if (fs.existsSync(plistPath)) {
+      const content = fs.readFileSync(plistPath, 'utf8');
+      const m = content.match(/<key>CFBundleShortVersionString<\/key>\s*<string>([^<]+)<\/string>/);
+      if (m) version = m[1].trim();
+    }
+  }
+
+  versionCache.set(cacheKey, version);
+  return version;
+}
 
 export function getChannelCandidates(channel = 'auto') {
   const home = os.homedir();
@@ -82,13 +119,12 @@ export function resolveAntigravityChannel(channel = 'auto') {
     const appExists = fs.existsSync(item.executable) || fs.existsSync(item.appDir);
     const portExists = fs.existsSync(portFile);
     if (appExists || portExists) {
-      const pkg = readJsonSafe(item.pkgJsonPath, null);
       return {
         ...item,
         appExists,
         portFile,
         portExists,
-        appVersion: pkg?.version || null
+        appVersion: readExecutableVersion(item.executable, item.pkgJsonPath)
       };
     }
   }

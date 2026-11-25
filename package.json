@@ -1,6 +1,6 @@
 {
   "name": "antigravity-zh-cn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Non-invasive Simplified Chinese localization plugin for Google Antigravity 2.0 with in-app Settings UI, automatic post-upgrade updates, and untranslated string collector.",
   "type": "module",
   "license": "MIT",

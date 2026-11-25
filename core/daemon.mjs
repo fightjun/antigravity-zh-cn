@@ -37,7 +37,14 @@ export class ZhCnDaemon {
 
   log(...args) {
     const stamp = new Date().toISOString();
-    console.log(`[antigravity-zh-cn ${stamp}]`, ...args);
+    const line = `[antigravity-zh-cn ${stamp}] ${args.map((a) => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ')}`;
+    console.log(line);
+    try {
+      const logPath = path.join(this.targetDir, 'daemon.log');
+      fs.appendFileSync(logPath, line + '\n', 'utf8');
+    } catch {
+      // Ignore log file errors
+    }
   }
 
   getConfigPath() {
@@ -470,8 +477,12 @@ export class ZhCnDaemon {
 }
 
 // CLI entrypoint when run directly
-const isDirectRun =
-  process.argv[1] && path.resolve(process.argv[1]) === path.resolve(__filename);
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false;
+  const a = path.resolve(process.argv[1]);
+  const b = path.resolve(__filename);
+  return process.platform === 'win32' ? a.toLowerCase() === b.toLowerCase() : a === b;
+})();
 
 if (isDirectRun) {
   const args = process.argv.slice(2);
@@ -484,15 +495,27 @@ if (isDirectRun) {
         ? DEFAULT_ROOT
         : getDefaultInstallDir();
 
+  const pidPath = path.join(path.resolve(targetDir), 'daemon.pid');
+  if (!once) {
+    try {
+      fs.writeFileSync(pidPath, String(process.pid), 'utf8');
+    } catch {}
+  }
+
   const daemon = new ZhCnDaemon({ targetDir, once });
-  process.on('SIGINT', () => {
+  const cleanup = () => {
     daemon.stop();
+    if (!once) {
+      try {
+        if (fs.existsSync(pidPath) && fs.readFileSync(pidPath, 'utf8').trim() === String(process.pid)) {
+          fs.rmSync(pidPath, { force: true });
+        }
+      } catch {}
+    }
     process.exit(0);
-  });
-  process.on('SIGTERM', () => {
-    daemon.stop();
-    process.exit(0);
-  });
+  };
+  process.on('SIGINT', cleanup);
+  process.on('SIGTERM', cleanup);
 
   daemon.start().then((res) => {
     if (once) {

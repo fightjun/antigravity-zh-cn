@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "version": "1.0.0",
-  "generatedAt": "2026-11-25T20:08:13.334Z",
+  "version": "1.0.1",
+  "generatedAt": "2026-11-25T20:20:37.258Z",
   "stats": {
     "exactCount": 275,
     "patternCount": 15,
@@ -9,16 +9,16 @@
   },
   "files": {
     "daemon.mjs": {
-      "sha256": "494f64288b968f002b331ac94a6ed0e31b402d8ce06f08ac1fa41058683bcc06",
-      "size": 16278
+      "sha256": "05f11b0e458909d2665905b3a44798e29f5daefdd6d517774baa7506ffb660dd",
+      "size": 17062
     },
     "daemon/cdp-bridge.mjs": {
       "sha256": "55573922bd913b396a2540a880cc6ea0949001f81433e5039ba303fdf14fb7a8",
       "size": 4681
     },
     "daemon/paths.mjs": {
-      "sha256": "84c14bfa0cc922a4c5577f031392c69a42fc1ef4f6c24af7b3837d32e64ffefa",
-      "size": 4626
+      "sha256": "98677b54cd20bbbe079a5b32b2d82f9a94a75986d189e320e16365da4d0d7bca",
+      "size": 5913
     },
     "daemon/updater.mjs": {
       "sha256": "2db3b58f82527db56f4f3c6d76169ed1054f4384a139aac31924573c0202e767",
@@ -33,8 +33,8 @@
       "size": 8566
     },
     "installer/cdp-launch.mjs": {
-      "sha256": "8bd498e8cb4dc4af82fd83106203cc0f9bbfd5b0a49c29478a0ef4c71e75f324",
-      "size": 4722
+      "sha256": "b51402b03170ef77a4a6c312b8e92662c233a995a66ff8a68e4792edee224032",
+      "size": 5885
     },
     "installer/env.mjs": {
       "sha256": "87139c739a5f5e6fea94cacf76e7cab45e234c5980675c26617de57fe240b9c0",
@@ -45,8 +45,8 @@
       "size": 2982
     },
     "installer/service.mjs": {
-      "sha256": "60d39385e33ec6bd8acc1e3570a00146e18ebcd7b05edc4a29592e3f13ac0b3c",
-      "size": 4653
+      "sha256": "104fe0abaaf14748caf97ee3b76febdaa77d5abae102a8f9dded583ef906de42",
+      "size": 5527
     },
     "runtime/00-bootstrap.js": {
       "sha256": "14e645d70462eb6d42f1fc739a581c901f8f1b5fc978a34717db13b28a5030b5",
