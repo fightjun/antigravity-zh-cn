@@ -215,8 +215,9 @@ export class ZhCnDaemon {
           const next = normalizeConfig({ ...this.config, ...(payload || {}) });
           writeJsonAtomic(this.getConfigPath(), next);
           this.config = next;
-          await this.reloadAllSessions('config-update');
-          await reply(true, this.buildStatusSnapshot());
+          const snap = this.buildStatusSnapshot();
+          await reply(true, snap);
+          setTimeout(() => this.reloadAllSessions('config-update'), 50);
           break;
         }
         case 'checkUpdate': {
@@ -232,29 +233,40 @@ export class ZhCnDaemon {
         case 'applyUpdate': {
           const res = await applyPluginUpdate(this.targetDir, this.config);
           this.lastUpdateResult = res;
+          const snap = this.buildStatusSnapshot();
+          await reply(
+            res.ok,
+            {
+              update: res,
+              status: snap
+            },
+            res.ok ? null : res.error
+          );
           if (res.ok && res.updated) {
-            await this.reloadAllSessions('plugin-updated');
+            setTimeout(() => this.reloadAllSessions('plugin-updated'), 150);
           }
-          await reply(res.ok, {
-            update: res,
-            status: this.buildStatusSnapshot()
-          }, res.ok ? null : res.error);
           break;
         }
         case 'rollback': {
           const res = rollbackPlugin(this.targetDir);
+          const snap = this.buildStatusSnapshot();
+          await reply(
+            res.ok,
+            {
+              rollback: res,
+              status: snap
+            },
+            res.ok ? null : res.error
+          );
           if (res.ok) {
-            await this.reloadAllSessions('rollback');
+            setTimeout(() => this.reloadAllSessions('rollback'), 150);
           }
-          await reply(res.ok, {
-            rollback: res,
-            status: this.buildStatusSnapshot()
-          }, res.ok ? null : res.error);
           break;
         }
         case 'reloadRuntime': {
-          const count = await this.reloadAllSessions('user-refresh');
-          await reply(true, { reloaded: count, status: this.buildStatusSnapshot() });
+          const snap = this.buildStatusSnapshot();
+          await reply(true, { reloaded: this.sessions.size, status: snap });
+          setTimeout(() => this.reloadAllSessions('user-refresh'), 50);
           break;
         }
         case 'reportUntranslated': {
@@ -450,14 +462,32 @@ export class ZhCnDaemon {
       return result;
     }
 
-    await this.checkAppUpgradeAndAutoUpdate();
+    // Attach to live Antigravity windows FIRST so UI RPC bridge is ready immediately
+    try {
+      await this.scanAndAttach();
+    } catch (err) {
+      this.log('Initial attach error:', err.message);
+    }
+
+    // Run upgrade/update check in background so network latency never blocks CDP attachment
+    let updateCheckInFlight = false;
+    const triggerBackgroundUpdateCheck = () => {
+      if (updateCheckInFlight) return;
+      updateCheckInFlight = true;
+      this.checkAppUpgradeAndAutoUpdate()
+        .catch((err) => this.log('Update check error:', err.message))
+        .finally(() => {
+          updateCheckInFlight = false;
+        });
+    };
+    triggerBackgroundUpdateCheck();
 
     let ticks = 0;
     while (this.running) {
       try {
         await this.scanAndAttach();
-        if (ticks % 30 === 0) {
-          await this.checkAppUpgradeAndAutoUpdate();
+        if (ticks > 0 && ticks % 30 === 0) {
+          triggerBackgroundUpdateCheck();
         }
       } catch (err) {
         this.log('Loop error:', err.message);

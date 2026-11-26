@@ -120,7 +120,7 @@
       busy = true;
       setBanner('正在下载、校验 SHA-256 并热更新...', 'info');
       try {
-        const res = await AG_ZH.callDaemon('applyUpdate');
+        const res = await AG_ZH.callDaemon('applyUpdate', {}, 60000);
         if (res?.update?.updated) {
           status = res.status || status;
           setBanner(
