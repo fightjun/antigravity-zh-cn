@@ -67,11 +67,13 @@ export function registerSystemService(targetDir) {
     );
 
     // Register & start a user-level Scheduled Task (no Admin required, survives terminal exit & app upgrades)
+    const psQuote = (s) => `'${String(s).replace(/'/g, "''")}'`;
     const taskPs = [
-      `$action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument ${JSON.stringify(`"${vbsPath}"`)}`,
+      `$action = New-ScheduledTaskAction -Execute 'C:\\Windows\\System32\\wscript.exe' -Argument ${psQuote(`"${vbsPath}"`)} -WorkingDirectory ${psQuote(targetDir)}`,
       `$trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME`,
-      `Register-ScheduledTask -TaskName ${JSON.stringify(SERVICE_IDS.windowsTaskName)} -Action $action -Trigger $trigger -Force | Out-Null`,
-      `Start-ScheduledTask -TaskName ${JSON.stringify(SERVICE_IDS.windowsTaskName)}`,
+      `$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Seconds 0) -MultipleInstances IgnoreNew`,
+      `Register-ScheduledTask -TaskName ${psQuote(SERVICE_IDS.windowsTaskName)} -Action $action -Trigger $trigger -Settings $settings -Force | Out-Null`,
+      `Start-ScheduledTask -TaskName ${psQuote(SERVICE_IDS.windowsTaskName)}`,
       'Start-Sleep -Milliseconds 1500'
     ].join('; ');
     const taskRes = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', taskPs], {
