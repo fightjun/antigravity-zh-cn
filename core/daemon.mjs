@@ -476,21 +476,12 @@ export class ZhCnDaemon {
   }
 }
 
-// CLI entrypoint when run directly
-const isDirectRun = (() => {
-  if (!process.argv[1]) return false;
-  const a = path.resolve(process.argv[1]);
-  const b = path.resolve(__filename);
-  return process.platform === 'win32' ? a.toLowerCase() === b.toLowerCase() : a === b;
-})();
-
-if (isDirectRun) {
-  const args = process.argv.slice(2);
-  const once = args.includes('--once');
-  const dirIdx = args.indexOf('--target-dir');
+export function startDaemonCli(argv = process.argv.slice(2)) {
+  const once = argv.includes('--once');
+  const dirIdx = argv.indexOf('--target-dir');
   const targetDir =
-    dirIdx !== -1 && args[dirIdx + 1]
-      ? args[dirIdx + 1]
+    dirIdx !== -1 && argv[dirIdx + 1]
+      ? argv[dirIdx + 1]
       : fs.existsSync(path.join(DEFAULT_ROOT, 'core', 'daemon.mjs'))
         ? DEFAULT_ROOT
         : getDefaultInstallDir();
@@ -517,10 +508,29 @@ if (isDirectRun) {
   process.on('SIGINT', cleanup);
   process.on('SIGTERM', cleanup);
 
-  daemon.start().then((res) => {
+  return daemon.start().then((res) => {
     if (once) {
       console.log(JSON.stringify(res, null, 2));
       process.exit(res.portFound && res.attached > 0 ? 0 : 1);
     }
+    return res;
   });
+}
+
+// CLI entrypoint when run directly (symlink-safe via realpathSync)
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    const a = fs.realpathSync(process.argv[1]);
+    const b = fs.realpathSync(__filename);
+    return process.platform === 'win32' ? a.toLowerCase() === b.toLowerCase() : a === b;
+  } catch {
+    const a = path.resolve(process.argv[1]);
+    const b = path.resolve(__filename);
+    return process.platform === 'win32' ? a.toLowerCase() === b.toLowerCase() : a === b;
+  }
+})();
+
+if (isDirectRun) {
+  startDaemonCli();
 }

@@ -7,7 +7,7 @@ import { SERVICE_IDS } from '../shared.mjs';
 const WIN_RUN_KEY = 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run';
 
 function getDaemonEntryPath(targetDir) {
-  return path.join(targetDir, 'core', 'daemon.mjs');
+  return path.join(targetDir, 'core', 'daemon-entry.mjs');
 }
 
 function getWindowsVbsPath(targetDir) {

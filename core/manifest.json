@@ -1,16 +1,20 @@
 {
   "schemaVersion": 1,
-  "version": "1.0.3",
-  "generatedAt": "2026-11-26T04:36:49.514Z",
+  "version": "1.0.4",
+  "generatedAt": "2026-11-26T04:46:34.402Z",
   "stats": {
     "exactCount": 288,
     "patternCount": 19,
-    "fileCount": 17
+    "fileCount": 18
   },
   "files": {
+    "daemon-entry.mjs": {
+      "sha256": "d5d97b7b74fa1aa96ac8488005b8714840f0ef9dd24065248b8cb86f14db5700",
+      "size": 66
+    },
     "daemon.mjs": {
-      "sha256": "05f11b0e458909d2665905b3a44798e29f5daefdd6d517774baa7506ffb660dd",
-      "size": 17062
+      "sha256": "785950e6bc2c66be9f656d2d2e78b6da47abc47435b9c5f04dbc9629a84750ef",
+      "size": 17375
     },
     "daemon/cdp-bridge.mjs": {
       "sha256": "4152a24d806a435364bb3678691a9c7681d7782a55ef76e9cd4003964257d344",
@@ -45,8 +49,8 @@
       "size": 2982
     },
     "installer/service.mjs": {
-      "sha256": "0322a43d8758e0e1db48b63c5f74b157040e0abc09e42dc64feda3baacfb8647",
-      "size": 6589
+      "sha256": "e9d2077bcdeefc0f6061663d1c33c17ab1ccec5ee252ef99c199e0ab5faa4c23",
+      "size": 6595
     },
     "runtime/00-bootstrap.js": {
       "sha256": "14e645d70462eb6d42f1fc739a581c901f8f1b5fc978a34717db13b28a5030b5",
