@@ -38,12 +38,19 @@
 - **Node.js >= 22.13.0**
 - **Google Antigravity 2.0**（支持 Windows / macOS / Linux，兼容 Stable 与 Insiders 通道）
 
-### 1. 克隆并安装
+### 1. AI 一键安装（推荐）
+
+直接将下面这段提示词复制发给 **Antigravity、Claude Code、Codex 或 Cursor**，AI 会自动完成拉取、安装与环境自检：
+
+> 请帮我安装 Google Antigravity 中文汉化插件：从 `https://github.com/fightjun/antigravity-zh-cn.git` 使用 `git clone --depth=1` 拉取仓库到本地，进入目录后依次运行 `node install.mjs install` 和 `node install.mjs doctor`，确认 `daemon.running` 与 `integrity.ok` 均为 `true`；如果 `live.reachable` 为 `false`，请提醒我关闭并重新双击桌面 Antigravity 图标以启用实时中文汉化（不要强行杀掉当前正在对话的窗口）。
+
+### 2. 命令行手动安装
 
 ```bash
-git clone https://github.com/fightjun/antigravity-zh-cn.git
+git clone --depth=1 https://github.com/fightjun/antigravity-zh-cn.git
 cd antigravity-zh-cn
 node install.mjs install
+node install.mjs doctor
 ```
 
 安装程序会自动完成：
@@ -53,7 +60,7 @@ node install.mjs install
 
 > **首次安装提示**：如果安装前 Antigravity 已经在运行且未开启调试端口，关闭后重新双击桌面图标打开（或执行 `node install.mjs relaunch`）即可立即生效。之后每次正常关闭重开或升级 Antigravity 都会自动生效，无需再手动执行任何命令。
 
-### 2. 软件内管理与自动更新
+### 3. 软件内管理与自动更新
 
 - 点击左侧主栏 **「译 中文汉化」**，或按 **`Ctrl+Shift+L`**（macOS：**`Cmd+Shift+L`**）打开管理面板。
 - 可随时实时切换中/英文界面、配置自动更新策略（自动静默热更新 / 发现更新时提示 / 仅手动）、点击 **「检查更新」 / 「立即热更新」 / 「回滚上一版本」**，以及查看并补全自动采集的新版本未翻译词条。
