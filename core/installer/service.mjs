@@ -59,23 +59,28 @@ export function registerSystemService(targetDir) {
     ].join('\r\n');
     fs.writeFileSync(vbsPath, vbs, 'utf8');
 
-    // Register in HKCU\...\Run (requires no Administrator privileges)
+    // Register in HKCU\...\Run (no Admin required)
     const regRes = spawnSync(
       'reg',
       ['add', WIN_RUN_KEY, '/v', SERVICE_IDS.windowsTaskName, '/t', 'REG_SZ', '/d', `wscript.exe "${vbsPath}"`, '/f'],
       { encoding: 'utf8', windowsHide: true }
     );
 
-    // Launch via WMI Win32_Process.Create so the daemon is completely detached from parent console/Job Objects
-    const wmiCmd = `Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = ${JSON.stringify(`wscript.exe "${vbsPath}"`)} } | Out-Null; Start-Sleep -Milliseconds 1200`;
-    const wmiRes = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', wmiCmd], {
+    // Register & start a user-level Scheduled Task (no Admin required, survives terminal exit & app upgrades)
+    const taskPs = [
+      `$action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument ${JSON.stringify(`"${vbsPath}"`)}`,
+      `$trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME`,
+      `Register-ScheduledTask -TaskName ${JSON.stringify(SERVICE_IDS.windowsTaskName)} -Action $action -Trigger $trigger -Force | Out-Null`,
+      `Start-ScheduledTask -TaskName ${JSON.stringify(SERVICE_IDS.windowsTaskName)}`,
+      'Start-Sleep -Milliseconds 1500'
+    ].join('; ');
+    const taskRes = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', taskPs], {
       encoding: 'utf8',
       windowsHide: true
     });
 
     let status = isDaemonRunning(targetDir);
     if (!status.running) {
-      // Fallback: direct detached spawn
       const child = spawn(nodeExec, [daemonPath, '--target-dir', targetDir], {
         detached: true,
         stdio: 'ignore',
@@ -86,14 +91,13 @@ export function registerSystemService(targetDir) {
     }
 
     return {
-      ok: regRes.status === 0 && status.running,
+      ok: (taskRes.status === 0 || regRes.status === 0) && status.running,
       platform: 'win32',
-      autostart: 'HKCU\\Run',
+      autostart: taskRes.status === 0 ? 'ScheduledTask+HKCU\\Run' : 'HKCU\\Run',
       valueName: SERVICE_IDS.windowsTaskName,
       daemonRunning: status.running,
       pid: status.pid,
-      vbsPath,
-      wmiOk: wmiRes.status === 0
+      vbsPath
     };
   }
 
