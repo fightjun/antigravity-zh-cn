@@ -49,6 +49,13 @@ test('diffManifests detects dictionary-only updates even without version bump', 
   assert.equal(diff.hasUpdates, true);
   assert.equal(diff.dictionaryOnly, true);
   assert.deepEqual(diff.changed, ['i18n/zh-CN.json']);
+
+  // Must never downgrade if local version is newer than remote (e.g., CDN cache lag)
+  const noDowngrade = diffManifests(
+    { version: '1.0.7', files: { 'i18n/zh-CN.json': { sha256: 'new' } } },
+    { version: '1.0.5', files: { 'i18n/zh-CN.json': { sha256: 'old' } } }
+  );
+  assert.equal(noDowngrade.hasUpdates, false);
 });
 
 test('applyPluginUpdate verifies SHA-256, preserves user/, and supports rollback', async () => {

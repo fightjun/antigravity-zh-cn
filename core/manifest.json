@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "version": "1.0.6",
-  "generatedAt": "2026-11-26T04:57:05.364Z",
+  "version": "1.0.7",
+  "generatedAt": "2026-11-26T04:58:29.564Z",
   "stats": {
     "exactCount": 288,
     "patternCount": 19,
@@ -25,8 +25,8 @@
       "size": 5913
     },
     "daemon/updater.mjs": {
-      "sha256": "2db3b58f82527db56f4f3c6d76169ed1054f4384a139aac31924573c0202e767",
-      "size": 8936
+      "sha256": "64aaeb9b603c953ccf6637a34e152d635b4df838b5d7d18c5a651f2cec9cf354",
+      "size": 9074
     },
     "i18n/patterns.json": {
       "sha256": "18765b9177d7b8f3aa95b42a43e777cd921319381aa275462e4a7ebf3aff6b5b",

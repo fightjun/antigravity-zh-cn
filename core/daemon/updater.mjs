@@ -61,7 +61,10 @@ export function diffManifests(localManifest, remoteManifest) {
   const localVer = localManifest?.version || '0.0.0';
   const remoteVer = remoteManifest?.version || '0.0.0';
   const versionCmp = compareSemver(remoteVer, localVer);
-  const hasUpdates = versionCmp > 0 || changed.length > 0 || added.length > 0 || removed.length > 0;
+  // Never downgrade when local version is newer than remote (e.g. GitHub raw CDN cache lag or local dev)
+  const hasUpdates =
+    versionCmp > 0 ||
+    (versionCmp === 0 && (changed.length > 0 || added.length > 0 || removed.length > 0));
 
   return {
     hasUpdates,
