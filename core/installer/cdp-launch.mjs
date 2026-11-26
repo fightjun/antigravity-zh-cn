@@ -5,12 +5,18 @@ import { spawn, spawnSync } from 'node:child_process';
 
 const CDP_FLAG = '--remote-debugging-port=0';
 
+const psQuote = (s) => `'${String(s).replace(/'/g, "''")}'`;
+
 function getWindowsShortcutDirs() {
   const home = os.homedir();
   const appData = process.env.APPDATA || path.join(home, 'AppData', 'Roaming');
+  const publicDir = process.env.PUBLIC || 'C:\\Users\\Public';
+  const programData = process.env.ProgramData || 'C:\\ProgramData';
   return [
     path.join(home, 'Desktop'),
+    path.join(publicDir, 'Desktop'),
     path.join(appData, 'Microsoft', 'Windows', 'Start Menu', 'Programs'),
+    path.join(programData, 'Microsoft', 'Windows', 'Start Menu', 'Programs'),
     path.join(appData, 'Microsoft', 'Internet Explorer', 'Quick Launch', 'User Pinned', 'TaskBar')
   ].filter((d) => fs.existsSync(d));
 }
@@ -24,10 +30,10 @@ function patchWindowsShortcuts(executable, mode = 'add') {
   const psScript = `
 $ErrorActionPreference = 'SilentlyContinue'
 $wsh = New-Object -ComObject WScript.Shell
-$target = ${JSON.stringify(targetLower)}
+$target = ${psQuote(targetLower)}
 $flag = '${CDP_FLAG}'
 $mode = '${mode}'
-$dirs = @(${dirs.map((d) => JSON.stringify(d)).join(', ')})
+$dirs = @(${dirs.map((d) => psQuote(d)).join(', ')})
 $patched = @()
 foreach ($d in $dirs) {
   Get-ChildItem -Path $d -Filter '*.lnk' -Recurse | ForEach-Object {
@@ -154,4 +160,42 @@ export function relaunchAntigravityWithCdp(channelInfo) {
   });
   child.unref();
   return { ok: true, executable: channelInfo.executable, pid: child.pid || null };
+}
+
+/**
+ * Checks if Antigravity just cold-started (within maxAgeSeconds) without --remote-debugging-port=.
+ * Used by the background daemon to seamlessly relay-relaunch after app upgrades or unpatched launches
+ * without ever interrupting an already-running session.
+ */
+export function detectFreshNonCdpAntigravity(channelInfo, maxAgeSeconds = 18) {
+  if (process.platform !== 'win32' || !channelInfo?.executable) {
+    return { needsRelay: false };
+  }
+  const exeName = path.basename(channelInfo.executable);
+  const ps = `
+$ErrorActionPreference = 'SilentlyContinue'
+$now = Get-Date
+$procs = Get-CimInstance Win32_Process -Filter ${psQuote(`Name='${exeName}'`)} | Where-Object {
+  $_.CommandLine -and ($_.CommandLine -notmatch '--type=') -and ($_.CommandLine -notmatch 'sidecar_sdk')
+}
+foreach ($p in $procs) {
+  $hasFlag = $p.CommandLine -match '--remote-debugging-port='
+  $age = ($now - $p.CreationDate).TotalSeconds
+  if (-not $hasFlag -and $age -ge 1 -and $age -le ${maxAgeSeconds}) {
+    [PSCustomObject]@{ needsRelay = $true; pid = $p.ProcessId; age = [Math]::Round($age, 1) } | ConvertTo-Json -Compress
+    exit 0
+  }
+}
+'{"needsRelay":false}'
+`;
+  const res = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', ps], {
+    encoding: 'utf8',
+    windowsHide: true
+  });
+  if (res.status !== 0 || !res.stdout.trim()) return { needsRelay: false };
+  try {
+    return JSON.parse(res.stdout.trim());
+  } catch {
+    return { needsRelay: false };
+  }
 }

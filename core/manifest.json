@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "version": "1.0.8",
-  "generatedAt": "2026-11-26T05:16:16.729Z",
+  "version": "1.0.9",
+  "generatedAt": "2026-11-26T05:25:20.127Z",
   "stats": {
     "exactCount": 288,
     "patternCount": 19,
@@ -13,8 +13,8 @@
       "size": 66
     },
     "daemon.mjs": {
-      "sha256": "fdfb88840713be6d448ca6b14c8e700faed52e701ea5a553bb02a0de0d46cf76",
-      "size": 18313
+      "sha256": "fd7e950cbac3fe1f65d125613ef97f2ac261714f24fcc87d4b49dcf08488c1fa",
+      "size": 19347
     },
     "daemon/cdp-bridge.mjs": {
       "sha256": "4152a24d806a435364bb3678691a9c7681d7782a55ef76e9cd4003964257d344",
@@ -37,8 +37,8 @@
       "size": 8957
     },
     "installer/cdp-launch.mjs": {
-      "sha256": "b51402b03170ef77a4a6c312b8e92662c233a995a66ff8a68e4792edee224032",
-      "size": 5885
+      "sha256": "b817865f7f4c2629afb412b21cb98e74180d21b7ea50b018533a4c046e7b8e9a",
+      "size": 7658
     },
     "installer/env.mjs": {
       "sha256": "87139c739a5f5e6fea94cacf76e7cab45e234c5980675c26617de57fe240b9c0",

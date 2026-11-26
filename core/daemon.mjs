@@ -17,7 +17,11 @@ import {
   detectAntigravityVersionChange
 } from './daemon/updater.mjs';
 import { ensureArgvRemoteDebugging } from './installer/env.mjs';
-import { ensureCdpLaunchers } from './installer/cdp-launch.mjs';
+import {
+  ensureCdpLaunchers,
+  detectFreshNonCdpAntigravity,
+  relaunchAntigravityWithCdp
+} from './installer/cdp-launch.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +35,7 @@ export class ZhCnDaemon {
     this.lastUpdateCheckAt = 0;
     this.lastUpdateResult = null;
     this.lastAppUpgradeInfo = null;
+    this.lastRelayAt = 0;
     this.running = false;
     this.config = this.loadConfig();
   }
@@ -415,7 +420,27 @@ export class ZhCnDaemon {
     this.config = this.loadConfig();
     const channelInfo = resolveAntigravityChannel(this.config.channel);
     const portInfo = readDevToolsPort(channelInfo.userDataDir);
-    if (!portInfo) return { attached: 0, portFound: false };
+    if (!portInfo) {
+      // If Antigravity just cold-started without --remote-debugging-port=0 (e.g. after auto-update or unpatched shortcut),
+      // re-patch shortcuts and seamlessly relay-relaunch once (never interrupts already-running sessions >18s old).
+      if (!this.once && Date.now() - this.lastRelayAt > 60000) {
+        const probe = detectFreshNonCdpAntigravity(channelInfo, 18);
+        if (probe.needsRelay) {
+          this.lastRelayAt = Date.now();
+          this.log(
+            `Detected fresh Antigravity launch without CDP (pid=${probe.pid}, age=${probe.age}s); patching shortcuts & relaying with --remote-debugging-port=0`
+          );
+          try {
+            ensureArgvRemoteDebugging(channelInfo.argvPath);
+            ensureCdpLaunchers(channelInfo);
+            relaunchAntigravityWithCdp(channelInfo);
+          } catch (err) {
+            this.log('Auto-relay warning:', err.message);
+          }
+        }
+      }
+      return { attached: 0, portFound: false };
+    }
 
     const targets = selectAntigravityTargets(await listCdpTargets(portInfo.port));
     let attachedNow = 0;
