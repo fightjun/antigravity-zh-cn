@@ -31,6 +31,19 @@ export function stopExistingDaemon(targetDir) {
   return true;
 }
 
+export function isDaemonRunning(targetDir) {
+  const pidPath = path.join(targetDir, 'daemon.pid');
+  if (!fs.existsSync(pidPath)) return { running: false, pid: null };
+  try {
+    const pid = Number.parseInt(fs.readFileSync(pidPath, 'utf8').trim(), 10);
+    if (!Number.isFinite(pid) || pid <= 0) return { running: false, pid: null };
+    process.kill(pid, 0);
+    return { running: true, pid };
+  } catch {
+    return { running: false, pid: null };
+  }
+}
+
 export function registerSystemService(targetDir) {
   const nodeExec = process.execPath;
   const daemonPath = getDaemonEntryPath(targetDir);
@@ -46,29 +59,41 @@ export function registerSystemService(targetDir) {
     ].join('\r\n');
     fs.writeFileSync(vbsPath, vbs, 'utf8');
 
-    // Register in HKCU\...\Run (requires no Administrator privileges!)
+    // Register in HKCU\...\Run (requires no Administrator privileges)
     const regRes = spawnSync(
       'reg',
       ['add', WIN_RUN_KEY, '/v', SERVICE_IDS.windowsTaskName, '/t', 'REG_SZ', '/d', `wscript.exe "${vbsPath}"`, '/f'],
       { encoding: 'utf8', windowsHide: true }
     );
 
-    // Launch node daemon directly in detached hidden mode so it starts reliably immediately
-    const child = spawn(nodeExec, [daemonPath, '--target-dir', targetDir], {
-      detached: true,
-      stdio: 'ignore',
+    // Launch via WMI Win32_Process.Create so the daemon is completely detached from parent console/Job Objects
+    const wmiCmd = `Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = ${JSON.stringify(`wscript.exe "${vbsPath}"`)} } | Out-Null; Start-Sleep -Milliseconds 1200`;
+    const wmiRes = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', wmiCmd], {
+      encoding: 'utf8',
       windowsHide: true
     });
-    child.unref();
+
+    let status = isDaemonRunning(targetDir);
+    if (!status.running) {
+      // Fallback: direct detached spawn
+      const child = spawn(nodeExec, [daemonPath, '--target-dir', targetDir], {
+        detached: true,
+        stdio: 'ignore',
+        windowsHide: true
+      });
+      child.unref();
+      status = { running: Boolean(child.pid), pid: child.pid || null };
+    }
 
     return {
-      ok: regRes.status === 0,
+      ok: regRes.status === 0 && status.running,
       platform: 'win32',
       autostart: 'HKCU\\Run',
       valueName: SERVICE_IDS.windowsTaskName,
-      pid: child.pid || null,
+      daemonRunning: status.running,
+      pid: status.pid,
       vbsPath,
-      output: (regRes.stdout || regRes.stderr || '').trim()
+      wmiOk: wmiRes.status === 0
     };
   }
 

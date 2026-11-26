@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "version": "1.0.2",
-  "generatedAt": "2026-11-26T04:18:32.495Z",
+  "version": "1.0.3",
+  "generatedAt": "2026-11-26T04:36:49.514Z",
   "stats": {
     "exactCount": 288,
     "patternCount": 19,
@@ -45,8 +45,8 @@
       "size": 2982
     },
     "installer/service.mjs": {
-      "sha256": "104fe0abaaf14748caf97ee3b76febdaa77d5abae102a8f9dded583ef906de42",
-      "size": 5527
+      "sha256": "0322a43d8758e0e1db48b63c5f74b157040e0abc09e42dc64feda3baacfb8647",
+      "size": 6589
     },
     "runtime/00-bootstrap.js": {
       "sha256": "14e645d70462eb6d42f1fc739a581c901f8f1b5fc978a34717db13b28a5030b5",

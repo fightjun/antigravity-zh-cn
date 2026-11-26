@@ -34,7 +34,7 @@ import {
   removeCdpLaunchers,
   relaunchAntigravityWithCdp
 } from './core/installer/cdp-launch.mjs';
-import { registerSystemService, uninstallSystemService } from './core/installer/service.mjs';
+import { registerSystemService, uninstallSystemService, isDaemonRunning } from './core/installer/service.mjs';
 import { resolveAntigravityChannel } from './core/daemon/paths.mjs';
 import { checkForUpdates, applyPluginUpdate, rollbackPlugin } from './core/daemon/updater.mjs';
 import { ZhCnDaemon } from './core/daemon.mjs';
@@ -204,11 +204,13 @@ async function runDoctor() {
   const targetDir = resolveTargetDir();
   const env = await detectEnvironment(channel);
   const integrity = verifyCoreIntegrity(targetDir);
+  const daemon = isDaemonRunning(targetDir);
   console.log(
     JSON.stringify(
       {
-        ok: env.node.ok && integrity.ok,
+        ok: env.node.ok && integrity.ok && daemon.running,
         targetDir,
+        daemon,
         integrity,
         environment: env
       },
