@@ -88,5 +88,29 @@
     "pattern": "^([\\d,]+)\\s+AI\\s+credits?\\s+remaining$",
     "flags": "i",
     "replace": "剩余 $1 AI 点数"
+  },
+  {
+    "id": "worked-for-hm",
+    "pattern": "^Worked\\s+for\\s+(\\d+)h\\s*(\\d+)m$",
+    "flags": "i",
+    "replace": "已运行 $1 小时 $2 分钟"
+  },
+  {
+    "id": "worked-for-ms",
+    "pattern": "^Worked\\s+for\\s+(\\d+)m\\s*(\\d+)s$",
+    "flags": "i",
+    "replace": "已运行 $1 分 $2 秒"
+  },
+  {
+    "id": "worked-for-m",
+    "pattern": "^Worked\\s+for\\s+(\\d+)m$",
+    "flags": "i",
+    "replace": "已运行 $1 分钟"
+  },
+  {
+    "id": "worked-for-s",
+    "pattern": "^Worked\\s+for\\s+(\\d+(?:\\.\\d+)?)s$",
+    "flags": "i",
+    "replace": "已运行 $1 秒"
   }
 ]

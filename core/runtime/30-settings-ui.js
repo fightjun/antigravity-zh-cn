@@ -482,23 +482,50 @@
     document.body.appendChild(backdrop);
   }
 
-  // Try to inject a native "中文汉化" button into Antigravity's Settings sidebar when open
+  // Inject a native "中文汉化" button into Antigravity's main left sidebar (next to Settings)
+  // AND inside the Settings view when opened.
   function tryInjectSettingsSidebarEntry() {
-    const dialogs = document.querySelectorAll('[role="dialog"], aside, nav');
-    for (const container of dialogs) {
-      if (container.querySelector(`[${NAV_ATTR}="true"]`)) continue;
-      // Heuristic: find a sidebar containing "Appearance" / "外观" or "App Settings" / "应用设置"
-      const buttons = Array.from(container.querySelectorAll('button, [role="tab"], [role="menuitem"]'));
-      const anchor = buttons.find((btn) => {
-        const t = (btn.textContent || '').trim();
-        return /^(Appearance|外观|App Settings|应用设置|Built-in Browser|内置浏览器)$/.test(t);
-      });
-      if (!anchor || !anchor.parentElement) continue;
+    const candidates = Array.from(document.querySelectorAll('button, a, [role="tab"], [role="menuitem"]'));
 
+    // 1. Main left sidebar: place right next to "Settings" / "设置"
+    const settingsBtn = candidates.find((el) => {
+      if (el.hasAttribute(NAV_ATTR) || el.closest('.ag-zh-panel')) return false;
+      const t = (el.innerText || el.textContent || '').trim();
+      return /^(Settings|设置)$/.test(t);
+    });
+
+    if (settingsBtn && settingsBtn.parentElement && !settingsBtn.parentElement.querySelector(`[${NAV_ATTR}="sidebar"]`)) {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = settingsBtn.className;
+      item.setAttribute(NAV_ATTR, 'sidebar');
+      item.setAttribute('data-ag-zh-ignore', 'true');
+      item.style.display = 'flex';
+      item.style.alignItems = 'center';
+      item.style.gap = '8px';
+      item.style.cursor = 'pointer';
+      item.innerHTML = '<span style="font-size:13px;line-height:1;">译</span><span>中文汉化</span>';
+      item.title = 'Antigravity 中文汉化与自动更新设置 (Ctrl/Cmd+Shift+L)';
+      item.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal();
+      };
+      settingsBtn.parentElement.insertBefore(item, settingsBtn.nextSibling);
+    }
+
+    // 2. Inside Settings dialog/page: place next to Appearance / App Settings / Built-in Browser
+    const anchor = candidates.find((el) => {
+      if (el.hasAttribute(NAV_ATTR) || el.closest('.ag-zh-panel')) return false;
+      const t = (el.innerText || el.textContent || '').trim();
+      return /^(Appearance|外观|App Settings|应用设置|Built-in Browser|内置浏览器)$/.test(t);
+    });
+
+    if (anchor && anchor.parentElement && !anchor.parentElement.querySelector(`[${NAV_ATTR}="settings"]`)) {
       const item = document.createElement('button');
       item.type = 'button';
       item.className = anchor.className;
-      item.setAttribute(NAV_ATTR, 'true');
+      item.setAttribute(NAV_ATTR, 'settings');
       item.setAttribute('data-ag-zh-ignore', 'true');
       item.textContent = '中文汉化';
       item.title = 'Antigravity 中文汉化与自动更新设置 (Ctrl/Cmd+Shift+L)';
@@ -554,7 +581,7 @@
       offEvent();
       const modal = document.getElementById(MODAL_ID);
       if (modal) modal.remove();
-      document.querySelectorAll(`[${NAV_ATTR}="true"]`).forEach((el) => el.remove());
+      document.querySelectorAll(`[${NAV_ATTR}]`).forEach((el) => el.remove());
     });
   }
 

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "1.0.1",
-  "generatedAt": "2026-11-25T20:20:37.258Z",
+  "version": "1.0.2",
+  "generatedAt": "2026-11-26T04:18:32.495Z",
   "stats": {
-    "exactCount": 275,
-    "patternCount": 15,
+    "exactCount": 288,
+    "patternCount": 19,
     "fileCount": 17
   },
   "files": {
@@ -13,8 +13,8 @@
       "size": 17062
     },
     "daemon/cdp-bridge.mjs": {
-      "sha256": "55573922bd913b396a2540a880cc6ea0949001f81433e5039ba303fdf14fb7a8",
-      "size": 4681
+      "sha256": "4152a24d806a435364bb3678691a9c7681d7782a55ef76e9cd4003964257d344",
+      "size": 4668
     },
     "daemon/paths.mjs": {
       "sha256": "98677b54cd20bbbe079a5b32b2d82f9a94a75986d189e320e16365da4d0d7bca",
@@ -25,12 +25,12 @@
       "size": 8936
     },
     "i18n/patterns.json": {
-      "sha256": "150d5709f40dd0864cb42f99efcb812bbfe14d1b41906eb94fb041435503c8f3",
-      "size": 2192
+      "sha256": "18765b9177d7b8f3aa95b42a43e777cd921319381aa275462e4a7ebf3aff6b5b",
+      "size": 2779
     },
     "i18n/zh-CN.json": {
-      "sha256": "d18bad6dc9a1114ca649561c27ad5cef21dd1956789d45c57456500ef4e9a910",
-      "size": 8566
+      "sha256": "2a7f4f7644ce076842e3dde2c765929c45ded7f34a77f0e63f36df9b2b5f4fee",
+      "size": 8957
     },
     "installer/cdp-launch.mjs": {
       "sha256": "b51402b03170ef77a4a6c312b8e92662c233a995a66ff8a68e4792edee224032",
@@ -61,8 +61,8 @@
       "size": 2725
     },
     "runtime/30-settings-ui.js": {
-      "sha256": "8d62cc1da06c602364fa585e143583f94761bf12c1860df8d9299ffa57af7bac",
-      "size": 21023
+      "sha256": "d6383adfb0c065ce1875d7899d606fd32f5b5417c21a8aade7404ece9496af0e",
+      "size": 22230
     },
     "runtime/90-init.js": {
       "sha256": "b6a153e0eeda2af43ec3dd346fbc929280f0f6ebcc32bf4a984a493e2047ac58",

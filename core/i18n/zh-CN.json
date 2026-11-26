@@ -282,5 +282,19 @@
   "Got it": "知道了",
   "What's New": "更新日志",
   "Release Notes": "版本说明",
-  "Version": "版本"
+  "Version": "版本",
+
+  "Window": "窗口",
+  "File": "文件",
+  "See less": "收起",
+  "See more": "展开更多",
+  "Show more": "显示更多",
+  "Show less": "收起",
+  "Load older messages": "加载更早的消息",
+  "Conversation Log": "对话日志",
+  "Review": "审查",
+  "Changes": "更改",
+  "All Projects": "所有项目",
+  "New Window": "新建窗口",
+  "Toggle Sidebar": "切换侧边栏"
 }

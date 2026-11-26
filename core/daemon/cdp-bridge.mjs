@@ -23,7 +23,7 @@ export function selectAntigravityTargets(targets) {
   return targets.filter((t) => {
     if (!t || t.type !== 'page' || !t.webSocketDebuggerUrl) return false;
     const url = String(t.url || '');
-    if (url.startsWith('devtools://') || url.startsWith('chrome-extension://')) return false;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
     return true;
   });
 }
