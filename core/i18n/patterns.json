@@ -112,5 +112,83 @@
     "pattern": "^Worked\\s+for\\s+(\\d+(?:\\.\\d+)?)s$",
     "flags": "i",
     "replace": "已运行 $1 秒"
+  },
+  {
+    "id": "your-plan-name",
+    "pattern": "^Your\\s+plan:\\s*(.+)$",
+    "flags": "i",
+    "replace": "当前套餐：$1"
+  },
+  {
+    "id": "available-ai-credits",
+    "pattern": "^Available\\s+AI\\s+credits:\\s*([\\d,]+)$",
+    "flags": "i",
+    "replace": "可用 AI 点数：$1"
+  },
+  {
+    "id": "show-breakdowns",
+    "pattern": "^Show\\s+(\\d+)\\s+breakdowns?$",
+    "flags": "i",
+    "replace": "展开 $1 项明细"
+  },
+  {
+    "id": "see-all-count",
+    "pattern": "^See\\s+all\\s*\\((\\d+)\\)$",
+    "flags": "i",
+    "replace": "查看全部 ($1)"
+  },
+  {
+    "id": "send-feedback-as",
+    "pattern": "^Send\\s+feedback\\s+as\\s+(.+)$",
+    "flags": "i",
+    "replace": "以 $1 身份提交反馈"
+  },
+  {
+    "id": "skills-tokens",
+    "pattern": "^Skills:\\s*([\\d,]+)\\s+tokens$",
+    "flags": "i",
+    "replace": "技能：$1 tokens"
+  },
+  {
+    "id": "weekly-limit-refresh",
+    "pattern": "^You have used some of your weekly limit, it will fully refresh in (.+)\\.$",
+    "flags": "i",
+    "replace": "你已使用部分每周配额，将在 $1 后完全重置。"
+  },
+  {
+    "id": "five-hour-limit-refresh",
+    "pattern": "^You have used some of your 5-hour limit, it will fully refresh in (.+)\\.$",
+    "flags": "i",
+    "replace": "你已使用部分 5 小时配额，将在 $1 后完全重置。"
+  },
+  {
+    "id": "weekly-limit-hit-credits",
+    "pattern": "^You have hit your weekly limit, it refreshes in ([^.]+)\\. If on a supported paid plan, you can use AI credits in the interim or upgrade to a higher tier\\.$",
+    "flags": "i",
+    "replace": "你已达到每周配额上限，将在 $1 后重置。如为支持的付费套餐，期间可使用 AI 点数或升级更高套餐。"
+  },
+  {
+    "id": "weekly-limit-hit-5h-na",
+    "pattern": "^You have hit your weekly limit, the 5-hour limit does not currently apply\\. Your weekly limit will fully refresh in (.+)\\.$",
+    "flags": "i",
+    "replace": "你已达到每周配额上限，5 小时限额当前不适用。每周配额将在 $1 后完全重置。"
+  },
+  {
+    "id": "shortcut-remove-aria",
+    "pattern": "^Remove shortcut (.+) for (.+)$",
+    "flags": "i",
+    "replace": "移除「$2」的快捷键 $1"
+  },
+  {
+    "id": "shortcut-add-aria",
+    "pattern": "^Add shortcut for (.+)$",
+    "flags": "i",
+    "replace": "为「$1」添加快捷键"
+  },
+  {
+    "id": "shortcut-for-aria",
+    "pattern": "^Shortcut (.+) for (.+)$",
+    "flags": "i",
+    "replace": "「$2」的快捷键：$1"
   }
 ]

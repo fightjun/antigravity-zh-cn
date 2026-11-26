@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "1.0.9",
-  "generatedAt": "2026-11-26T05:25:20.127Z",
+  "version": "1.1.0",
+  "generatedAt": "2026-11-26T05:44:10.706Z",
   "stats": {
-    "exactCount": 288,
-    "patternCount": 19,
+    "exactCount": 519,
+    "patternCount": 32,
     "fileCount": 18
   },
   "files": {
@@ -29,12 +29,12 @@
       "size": 9074
     },
     "i18n/patterns.json": {
-      "sha256": "18765b9177d7b8f3aa95b42a43e777cd921319381aa275462e4a7ebf3aff6b5b",
-      "size": 2779
+      "sha256": "16ec81c93bd17a61509da11ddf24e726309ccc906c734d9ee70378f28b87e120",
+      "size": 5288
     },
     "i18n/zh-CN.json": {
-      "sha256": "2a7f4f7644ce076842e3dde2c765929c45ded7f34a77f0e63f36df9b2b5f4fee",
-      "size": 8957
+      "sha256": "16791862432bd1cb634672ba397168b4fff571d462a1fc7c6c97e79dc9cccbb2",
+      "size": 24412
     },
     "installer/cdp-launch.mjs": {
       "sha256": "b817865f7f4c2629afb412b21cb98e74180d21b7ea50b018533a4c046e7b8e9a",
